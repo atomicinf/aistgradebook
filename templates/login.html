@@ -1,0 +1,21 @@
+{%include file="common_header.html"%}
+{%if $smarty.post.method == 'login'%}
+	{%if $status == 'BAD_USERNAME'%}
+	{%include file="errorbox.html" boxtitle="Login Error" boxcontent=$S_BAD_USERNAME%}
+	{%elseif $status == 'BAD_PASSWORD'%}
+	{%include file="errorbox.html" boxtitle="Login Error" boxcontent=$S_BAD_PASSWORD%}
+	{%elseif $status == 'NO_LOGIN_PERMISSION'%}
+	{%include file="errorbox.html" boxtitle="Login Error" boxcontent=$S_NO_LOGIN_PERMISSION%}
+	{%else%}
+	{%include file="notifybox.html" boxtitle="Notice" boxcontent=$S_LOGIN_SUCCESSFUL|cat:$S_HOME_LINK%}
+	{%/if%}
+{%elseif $smarty.request.method == 'logout'%}
+{%include file="notifybox.html" boxtitle="Notice" boxcontent=$S_LOGOUT_SUCCESSFUL|cat:$S_HOME_LINK%}
+{%else%}
+{%/if%}
+{%if $status != 'SUCCESS' && !$V_IS_LOGGED_IN%}
+{%include file="loginform.html"%}
+{%elseif $status != 'SUCCESS' && $V_IS_LOGGED_IN%}
+{%include file="notifybox.html" boxtitle="Notice" boxcontent=$S_ALREADY_LOGGED_IN|cat:$S_HOME_LINK%}
+{%/if%}
+{%include file="common_footer.html"%}

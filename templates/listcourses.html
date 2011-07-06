@@ -1,0 +1,79 @@
+{%include file="common_header.html"%}
+{%if $V_IS_LOGGED_IN%}
+{%if $A_COURSE_LIST_INSTRUCTOR.0%}
+{%include file="contentbox_start.html" boxtitle="Courses Instructing"%}
+<table>
+<tr class="header"><th style="width:20%">Course Name</th><th style="width:10%">Code</th><th style="width:15%">Instructor</th><th>Term</th><th>Course Description</th>{%if $V_PERMISSIONS_MANAGECOURSES%}<th style="width:7%" />{%/if%}</tr>
+{%foreach from=$A_COURSE_LIST_INSTRUCTOR key=k item=v%}
+<tr class="{%if $k is even%}odd{%else%}even{%/if%}"><td><a href="courses.php?mode=viewcourse&amp;id={%$v.id%}">{%$v.course_name%}</a></td><td>{%$v.course_name_short%}</td><td>{%$v.instructor%}</td><td>{%$v.term%}</td><td>{%$v.description%}</td>{%if $V_PERMISSIONS_MANAGECOURSES%}<td><a href="courses.php?mode=deletecourse&amp;id={%$v.id%}">Delete</a></td>{%/if%}</tr>
+{%/foreach%}
+</table>
+{%include file="contentbox_end.html"%}
+{%/if%}
+{%if $A_COURSE_LIST_STUDENT.0%}
+{%include file="contentbox_start.html" boxtitle="Courses Attending"%}
+<table>
+<tr class="header"><th style="width:20%">Course Name</th><th style="width:10%">Code</th><th style="width:15%">Instructor</th><th>Term</th><th>Course Description</th>{%if $V_PERMISSIONS_MANAGECOURSES%}<th style="width:7%" />{%/if%}</tr>
+{%foreach from=$A_COURSE_LIST_STUDENT key=k item=v%}
+<tr class="{%if $k is even%}odd{%else%}even{%/if%}"><td><a href="courses.php?mode=viewcourse&amp;id={%$v.id%}">{%$v.course_name%}</a></td><td>{%$v.course_name_short%}</td><td>{%$v.instructor%}</td><td>{%$v.term%}</td><td>{%$v.description%}</td>{%if $V_PERMISSIONS_MANAGECOURSES%}<td><a href="courses.php?mode=deletecourse&amp;id={%$v.id%}">Delete</a></td>{%/if%}</tr>
+{%/foreach%}
+</table>
+{%include file="contentbox_end.html"%}
+{%/if%}
+{%if (($V_PERMISSIONS_MANAGECOURSES || $V_PERMISSIONS_SEEALLCOURSES) && $A_COURSE_LIST_OTHER.0) || (!$A_COURSE_LIST_STUDENT.0 && !$A_COURSE_LIST_INSTRUCTOR.0)%}
+{%include file="contentbox_start.html" boxtitle="Other Courses"%}
+{%if $A_COURSE_LIST_OTHER.0%}
+<table>
+<tr class="header"><th style="width:20%">Course Name</th><th style="width:10%">Code</th><th style="width:15%">Instructor</th><th>Term</th><th>Course Description</th>{%if $V_PERMISSIONS_MANAGECOURSES%}<th style="width:7%" />{%/if%}</tr>
+{%foreach from=$A_COURSE_LIST_OTHER key=k item=v%}
+<tr class="{%if $k is even%}odd{%else%}even{%/if%}"><td><a href="courses.php?mode=viewcourse&amp;id={%$v.id%}">{%$v.course_name%}</a></td><td>{%$v.course_name_short%}</td><td>{%$v.instructor%}</td><td>{%$v.term%}</td><td>{%$v.description%}</td>{%if $V_PERMISSIONS_MANAGECOURSES%}<td><a href="courses.php?mode=deletecourse&amp;id={%$v.id%}">Delete</a></td>{%/if%}</tr>
+{%/foreach%}
+</table>
+{%else%}
+<p>{%$S_NO_COURSES%}</p>
+{%/if%}
+{%include file="contentbox_end.html"%}
+{%/if%}
+{%if $V_PERMISSIONS_MANAGECOURSES%}
+{%include file="contentbox_start.html" boxtitle="Add Course"%}
+<form method="post" action="courses.php" style="font-size:80%">
+<table class="noborders" style="width:auto">
+<tr>
+<td>Course Name</td>
+</tr>
+<tr>
+<td><input type="text" name="course_name" style="width:41.5em;" /></td>
+</tr>
+</table>
+<table class="noborders" style="width:auto">
+<tr>
+<td>Short Name</td>
+<td>Instructor</td>
+<td>Term</td>
+</tr>
+<tr>
+<td><input type="text" name="course_name_short" maxlength="12" style="width:10em;"/></td>
+<td><input type="text" name="instructor" maxlength="80" style="width:20em;"/></td>
+<td><input type="text" name="term" maxlength="40" style="width:10em;"/></td>
+</tr>
+</table>
+<table class="noborders">
+<tr><td>Course Description</td></tr>
+<tr><td><input type="text" name="description" maxlength="255" style="width:41.5em;"/></td></tr>
+</table>
+<table class="noborders" style="width:auto">
+<tr><td>Course Info</td></tr>
+<tr><td><textarea name="info" rows="10" cols="67"></textarea></td></tr>
+</table>
+<div><input type="hidden" name="mode" value="addcourse" />
+<input type="submit" /></div>
+</form>
+{%include file="contentbox_end.html"%}
+{%/if%}
+{%else%}
+<div class="clearfix">
+{%include file="errorbox.html" boxtitle="Login Required" boxcontent="You must be logged in to use this page.<br />Debug Notice: error_mustlogin.html should have been served. Please contact the system administrator."%}
+</div>
+{%include file="loginform.html"%}
+{%/if%}
+{%include file="common_footer.html"%}

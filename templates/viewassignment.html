@@ -1,0 +1,98 @@
+{%*Not nearly finished... needs to add actual stuff. The logic still needs to be done as well.*%}
+
+{%include file="common_header.html"%}
+{%if $V_IS_LOGGED_IN%}
+	{%if not $LOCKOUT_PAGE%}
+		{%if $A_ASSIGNMENT_DATA%}
+			<div class="clearfix">
+			<div style="float:left;width:365px;border:1px solid #eeeeff">
+			{%include file="contentbox_start.html" boxtitle="Assignment Info"%}
+			<table class="noborders">
+			<tr><th class="one" style="vertical-align:top;">Course</th><td class="three"><a href="courses.php?mode=viewcourse&id={%$A_ASSIGNMENT_DATA.course_id%}">{%$A_ASSIGNMENT_DATA.course_name%}</a></td></tr>
+			<tr><th class="two" style="vertical-align:top;">Assignment Name</th><td class="four">{%$A_ASSIGNMENT_DATA.assignment_name%}</td></tr>
+			<tr><th class="one" style="vertical-align:top;">Assignment Code</th><td class="three">{%$A_ASSIGNMENT_DATA.assignment_code%}</td></tr>
+			<tr><th class="two" style="vertical-align:top;">Due Date</th><td class="four">{%$A_ASSIGNMENT_DATA.due_date|date_format:"%Y-%m-%d %H:%M:%S"%}</td></tr>
+			<tr><th class="one" style="vertical-align:top;">Max. Points</th><td class="three">{%$A_ASSIGNMENT_DATA.max_points%}</td></tr>
+			<tr><th class="two" style="vertical-align:top;">Max. Value (Weight)</th><td class="four">{%$A_ASSIGNMENT_DATA.max_points*$A_ASSIGNMENT_DATA.weight%} ({%$A_ASSIGNMENT_DATA.weight%}x)</td></tr>
+			</table>
+			{%include file="contentbox_end.html"%}
+			{%include file="contentbox_start.html" boxtitle="Assignment Description"%}
+			<div style="max-height:160px;overflow:auto;"><p style="margin:6px 0px 6px 0px";>{%$A_ASSIGNMENT_DATA.description%}</p></div>
+			{%include file="contentbox_end.html"%}
+			{%if $V_PERMISSIONS_C_VIEWALLGRADES%}
+				{%include file="contentbox_start.html" boxtitle="Statistics"%}
+				<table class="noborders">
+				<tr><th class="one" style="vertical-align:top;width:8em">Num. Graded</th><td class="three">{%$A_ASSIGNMENT_STATISTICS.num_graded%}/{%$A_ASSIGNMENT_STATISTICS.class_size%}</td></tr>
+				<tr><th class="two" style="vertical-align:top;">Average Grade</th><td class="four">{%$A_ASSIGNMENT_STATISTICS.average_grade%}</td></tr>
+				<tr><th class="one" style="vertical-align:top;">Median Grade</th><td class="three">{%$A_ASSIGNMENT_STATISTICS.median_grade%}</td></tr>
+				<tr><th class="two" style="vertical-align:top;">Std. Deviation</th><td class="four">{%$A_ASSIGNMENT_STATISTICS.standard_deviation%}</td></tr>
+				</table>
+				{%include file="contentbox_end.html"%}
+			{%/if%}
+			</div>
+			<div style="margin-left:355px;border:1px solid #eeeeff">
+			{%if $V_PERMISSIONS_C_VIEWOWNGRADES%}
+				{%include file="contentbox_start.html" boxtitle="My Grade"%}
+				<table class="noborders">
+				<tr><th class="one" style="vertical-align:top;width:8em">Assignment Grade</th><td class="three">{%if $A_USER_GRADE.points%}{%$A_USER_GRADE.points%}/{%$A_ASSIGNMENT_DATA.max_points%} ({%percent2letter percent=$A_USER_GRADE.points/$A_ASSIGNMENT_DATA.max_points*100%}){%elseif $A_USER_GRADE.is_overdue%}<span style="color:red;font-weight:bold">Overdue</span>{%else%}Ungraded{%/if%}</td></tr>
+				<tr><th class="two" style="vertical-align:top;">Teacher Comments</th><td class="four">{%$A_USER_GRADE.comments%}</td></tr>
+				</table>
+				{%include file="contentbox_end.html"%}
+			{%/if%}
+			{%if $V_PERMISSIONS_C_VIEWALLGRADES%}
+				{%include file="contentbox_start.html" boxtitle="Grades List"%}
+				<table class="splashpage">
+				<tr class="header"><th>Student Name</th><th>Grade</th><th>Comments</th></tr>
+				{%foreach from=$A_GRADE_LIST key=k item=v%}
+				<tr class="{%if $k is even%}odd{%else%}even{%/if%}"><td style="width:16em;">{%$v.student_name%}</td>{%if $v.is_null || ($v.number_grade === NULL && $v.is_overdue == 0)%}<td colspan=2>This student has not been assigned a grade.</td>{%elseif $v.is_overdue%}<td colspan=2>This student has not been assigned a grade, but is acknowledged as overdue.</td>{%else%}<td style="width:6em;">{%$v.number_grade%}/{%$A_ASSIGNMENT_DATA.max_points%} ({%$v.letter_grade%})</td><td>{%$v.comments%}</td>{%/if%}</tr>
+				{%foreachelse%}
+				<tr><td colspan=3>This course has no students.</td></tr>
+				{%/foreach%}
+				</table>
+				{%include file="contentbox_end.html"%}
+			{%/if%}
+			{%if $V_PERMISSIONS_C_SETGRADES%}
+				{%include file="contentbox_start.html" boxtitle="Set Grades"%}
+				<form class="tableform" action="assignments.php" method="post">
+				<table class="splashpage">
+				<tr class="header"><th>Student Name</th><th>Points</th><th>OD?</th><th>Comments</th></tr>
+				{%foreach from=$A_GRADE_LIST key=k item=v%}
+				<tr class="{%if $k is even%}odd{%else%}even{%/if%}"><td style="width:16em;">{%$v.student_name%}</td><td style="width:6em;"><input type="input" name="grades[{%$v.user_id%}][grade]" value="{%$v.number_grade%}" /></td><td style="width:2em"><input type="checkbox" name="grades[{%$v.user_id%}][is_overdue]" {%if $v.is_overdue%}checked{%/if%} /></td><td><input type="input" name="grades[{%$v.user_id%}][comments]" value="{%$v.comments%}" /></td></tr>
+				{%foreachelse%}
+				<tr><td colspan=3>This course has no students.</td></tr>
+				{%/foreach%}
+				<input type="hidden" name="id" value="{%$A_ASSIGNMENT_DATA.id%}" />
+				<input type="hidden" name="mode" value="update_grades" />
+				<tr><td style="padding-top:2px;text-align:center;border:none;"><input type="submit" value="Update" style="width:10em;" {%if !$A_GRADE_LIST%}disabled{%/if%} /></td><td colspan="3" style="border:none;"></td></tr>
+				</table>
+				</form>
+				{%include file="contentbox_end.html"%}
+			{%/if%}
+			{%if $V_PERMISSIONS_C_MANAGEASSIGNMENTS%}
+				{%include file="contentbox_start.html" boxtitle="Edit Assignment"%}
+				<form action="assignments.php" method="post">
+				<table class="noborders">
+				<tr><td style="width:8em">Name:</td><td><input type="text" name="assignment_name" value="{%$A_ASSIGNMENT_DATA.assignment_name%}" /></td></tr>
+				<tr><td>Code:</td><td><input type="text" name="assignment_code" value="{%$A_ASSIGNMENT_DATA.assignment_code%}" /></td></tr>
+				<tr><td>Due Date:</td><td><input type="text" name="due_date" value="{%$A_ASSIGNMENT_DATA.due_date|date_format:"%Y-%m-%d %H:%M:%S"%}" /></td></tr>
+				<tr><td>Max. Points:</td><td><input type="text" name="max_points" value="{%$A_ASSIGNMENT_DATA.max_points%}" /></td></tr>
+				<tr><td>Weight:</td><td><input type="text" name="weight" value="{%$A_ASSIGNMENT_DATA.weight%}" /></td></tr>
+				<tr><td>Description:</td><td><textarea name="description" rows="5" cols="40">{%$A_ASSIGNMENT_DATA.description%}</textarea></td></tr>
+				<tr><td></td><td><input type="hidden" name="id" value="{%$A_ASSIGNMENT_DATA.id%}" /><input type="hidden" name="mode" value="edit_assignment" /><input type="submit" value="Update" /></td></tr>
+				</table>
+				</form>
+				{%include file="contentbox_end.html"%}
+			{%/if%}
+			</div>
+			</div>
+		{%else%}
+			{%include file="errorbox.html" boxtitle="Error" boxcontent="The assignment you have attempted to access does not exist."%}
+		{%/if%}
+	{%/if%}
+{%else%}
+	<div class="clearfix">
+	{%include file="errorbox.html" boxtitle="Login Required" boxcontent="You must be logged in to use this page.<br />Debug Notice: error_mustlogin.html should have been served. Please contact the system administrator."%}
+	</div>
+	{%include file="loginform.html"%}
+{%/if%}
+{%include file="common_footer.html"%}

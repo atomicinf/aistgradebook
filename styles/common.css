@@ -1,0 +1,149 @@
+@charset "ISO-8859-1";
+
+html {
+	font-family:Arial,sans-serif;background-color:#ffffff;
+}
+body {
+	background-color:#eeeeff;
+	padding-bottom:5px;
+	min-width:800px;
+}
+div.topbar {
+	background-color:#ccccff;
+	padding:5px;
+}
+div.navbar {
+	background-color:#ddddff;
+	padding:5px;
+}
+div.right {
+	float:right;
+	padding:2px;
+}
+.small {
+	font-size:80%;
+}
+div.hr {
+	border-bottom:1px solid white;
+}
+h1 {
+	margin:0px;
+	padding:0px;
+}
+p {
+	padding-left:5px;
+	padding-right:5px;
+	font-size:80%;
+}
+div.mainpage {
+	margin:5px;
+	border:1px solid #99aaff;
+}
+
+table {
+	border-collapse:collapse;
+	width:100%;
+	/*margin:5px;*/
+	/*table-layout:fixed;*/
+}
+table th, table td {
+	padding-left:2px;
+	padding-right:2px;
+	border-left:1px solid #ccccff;
+	border-right:1px solid #ccccff;
+}
+table th {
+	border:1px solid #ccccff;
+}
+table tr.header {
+	background-color:#ddddff;
+}
+table tr.even {
+	background-color:#e4e4ff;
+}
+table tr.odd {
+	background-color:#eeeeff;
+}
+table td.one, table th.one {
+	background-color:#ddddff;
+}
+table td.two, table th.two {
+	background-color:#e3e3ff;
+}
+table td.three, table th.three {
+	background-color:#e9e9ff;
+}
+table td.four, table th.four {
+	background-color:#eeeeff;
+}
+table.loginform td {
+	border:none;
+}
+table.red th, table.red td {
+	border-left:1px solid #ffcccc;
+	border-right:1px solid #ffcccc;
+}
+table.red th {
+	border-bottom:1px solid #ffcccc;
+}
+table.red tr.header {
+	background-color:#ffdddd;
+}
+table.red tr.even {
+	background-color:#ffe4e4;
+}
+table.red tr.odd {
+	background-color:#ffeeee;
+}
+
+table.splashpage {
+	border-collapse:collapse;
+	width:100%;
+	font-size:80%;
+	margin:0px;
+}
+table.splashpage th, table.splashpage td {
+	padding-left:2px;
+	padding-right:2px;
+	border-left:1px solid #ccccff;
+	border-right:1px solid #ccccff;
+	border-top:none;
+	border-bottom:none;
+}
+table.splashpage th {
+	border-bottom:1px solid #ccccff;
+}
+table.splashpage tr.header {
+	background-color:#ddddff;
+}
+table.splashpage tr.even {
+	background-color:#e4e4ff;
+}
+table.splashpage tr.odd {
+	background-color:#eeeeff;
+}
+table.splashpage.red th, table.splashpage.red td {
+	border-left:1px solid #ffcccc;
+	border-right:1px solid #ffcccc;
+}
+table.splashpage.red th {
+	border-bottom:1px solid #ffcccc;
+}
+table.splashpage.red tr.header {
+	background-color:#ffdddd;
+}
+table.splashpage.red tr.even {
+	background-color:#ffe4e4;
+}
+table.splashpage.red tr.odd {
+	background-color:#ffeeee;
+}
+
+table.noborders tr, table.noborders td, table.noborders th {
+	border:none;
+}
+
+form.tableform input {
+	border:1px solid black;
+	width:100%;
+}

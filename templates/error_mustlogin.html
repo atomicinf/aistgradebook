@@ -1,0 +1,12 @@
+{%include file="common_header.html"%}
+{%if $V_IS_LOGGED_IN%}
+<div class="clearfix">
+{%include file="errorbox.html" boxtitle="Error" boxcontent="AIStGradebook attempted to serve a Login Required page to a logged-in user. Please contact the system administrator."%}
+</div>
+{%else%}
+<div class="clearfix">
+{%include file="errorbox.html" boxtitle="Login Required" boxcontent="You must be logged in to use this page."%}
+</div>
+{%include file="loginform.html"%}
+{%/if%}
+{%include file="common_footer.html"%}

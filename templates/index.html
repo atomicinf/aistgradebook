@@ -1,0 +1,115 @@
+{%include file="common_header.html"%}
+{%if $V_IS_LOGGED_IN%}
+<!-- <p>Welcome back {%$V_USER_FIRSTNAME%}!</p> -->
+
+<div class="clearfix">
+<div style="float:left;width:365px;border:1px solid #eeeeff">
+{%if $A_USER_OVERDUE_ASSIGNMENTS.0%}
+{%include file="contentbox_start.html" background_color="#ffe7e7" titlebar_color="#ffcccc" boxtitle="Overdue Assignments"%}
+<table class="splashpage red">
+<tr class="header"><th>Due</th><th>Course</th><th>Name</th></tr>
+{%foreach from=$A_USER_OVERDUE_ASSIGNMENTS key=k item=v%}
+<tr class="{%if $k is even%}odd{%else%}even{%/if%}"><td>{%$v.due_date|date_format:"%Y-%m-%d"%}</td><td><a href="courses.php?mode=viewcourse&amp;id={%$v.course_id%}">{%$v.course_name_short%}</a></td><td style="width:50%"><a href="assignments.php?mode=assignment_details&id={%$v.id%}">{%$v.assignment_name%}</a></td></tr>
+{%/foreach%}
+</table>
+{%include file="contentbox_end.html"%}
+{%/if%}
+{%if $V_USER_ASSIGNMENTS_VISIBLE%}
+{%include file="contentbox_start.html" boxtitle="Assignments" righttext="<a href=\"assignments.php\">List All</a>"%}
+{%if $A_USER_ASSIGNMENTS.0%}
+<table class="splashpage">
+<tr class="header"><th>Due</th><th>Course</th><th>Name</th></tr>
+{%foreach from=$A_USER_ASSIGNMENTS key=k item=v%}
+<tr class="{%if $k is even%}odd{%else%}even{%/if%}"><td>{%$v.due_date|date_format:"%Y-%m-%d"%}</td><td><a href="courses.php?mode=viewcourse&amp;id={%$v.course_id%}">{%$v.course_name_short%}</a></td><td style="width:50%"><a href="assignments.php?mode=assignment_details&id={%$v.id%}">{%$v.assignment_name%}</a></td></tr>
+{%/foreach%}
+</table>
+{%else%}
+<p class="small">You have no upcoming assignments.</p>
+{%/if%}
+{%include file="contentbox_end.html"%}
+{%/if%}
+{%if $V_INSTRUCTOR_ASSIGNMENTS_VISIBLE%}
+{%include file="contentbox_start.html" boxtitle="Instructor Assignments" righttext="<a href=\"assignments.php\">List All</a> &bull; Create"%}
+{%if $A_INSTRUCTOR_ASSIGNMENTS.0%}
+<table class="splashpage">
+<tr class="header"><th>Due</th><th>Course</th><th>Name</th></tr>
+{%foreach from=$A_INSTRUCTOR_ASSIGNMENTS key=k item=v%}
+<tr class="{%if $k is even%}odd{%else%}even{%/if%}"><td>{%$v.due_date|date_format:"%Y-%m-%d"%}</td><td><a href="courses.php?mode=viewcourse&amp;id={%$v.course_id%}">{%$v.course_name_short%}</a></td><td style="width:50%"><a href="assignments.php?mode=assignment_details&id={%$v.id%}">{%$v.assignment_name%}</a></td></tr>
+{%/foreach%}
+</table>
+{%else%}
+<p class="small">None of the courses for which you are registered as an instructor have any upcoming assignments.</p>
+{%/if%}
+{%include file="contentbox_end.html"%}
+{%/if%}
+{%if $V_USER_COURSES_VISIBLE%}
+{%include file="contentbox_start.html" boxtitle="Courses"%}
+{%if $A_USER_COURSES.0%}
+<table class="splashpage">
+<tr class="header"><th>Course</th><th>Instructor</th><th>Term</th></tr>
+{%foreach from=$A_USER_COURSES key=k item=v%}
+<tr class="{%if $k is even%}odd{%else%}even{%/if%}"><td style="width:50%"><a href="courses.php?mode=viewcourse&amp;id={%$v.id%}">{%$v.course_name%}</a></td><td>{%$v.instructor%}</td><td>{%$v.term%}</td></tr>
+{%/foreach%}
+</table>
+{%else%}
+<p class="small">You are not registered for any courses.</p>
+{%/if%}
+{%include file="contentbox_end.html"%}
+{%/if%}
+{%if $V_INSTRUCTOR_COURSES_VISIBLE%}
+{%include file="contentbox_start.html" boxtitle="Instructor Courses"%}
+{%if $A_INSTRUCTOR_COURSES.0%}
+<table class="splashpage">
+<tr class="header"><th>Course</th><th>Term</th></tr>
+{%foreach from=$A_INSTRUCTOR_COURSES key=k item=v%}
+<tr class="{%if $k is even%}odd{%else%}even{%/if%}"><td><a href="courses.php?mode=viewcourse&amp;id={%$v.id%}">{%$v.course_name%}</a></td><td>{%$v.term%}</td></tr>
+{%/foreach%}
+</table>
+{%else%}
+<p class="small">You are not registered as an instructor for any courses.</p>
+{%/if%}
+{%include file="contentbox_end.html"%}
+{%/if%}
+</div>
+<div style="margin-left:355px;border:1px solid #eeeeff">
+{%include file="contentbox_start.html" boxtitle="Announcements"%}
+{%foreach from=$A_USER_ANNOUNCEMENTS key=k item=v%}
+{%if $v.course_name%}
+{%include file="contentbox_start.html" background_color="#e2e2ff" boxtitle=$v.course_name|cat:" - "|cat:$v.announcement_title righttext="Posted "|cat:$v.announcement_time|cat:" by "|cat:$v.announcement_poster%}
+{%else%}
+{%include file="contentbox_start.html" background_color="#e2e2ff" boxtitle="System message"|cat:" - "|cat:$v.announcement_title righttext="Posted "|cat:$v.announcement_time|cat:" by "|cat:$v.announcement_poster%}
+{%/if%}
+<p>{%$v.announcement_text%}</p>
+{%include file="contentbox_end.html"%}
+{%foreachelse%}
+<p>No recent announcements exist.</p>
+{%/foreach%}
+{%if $V_PERMISSIONS_CREATEGLOBALANNOUNCEMENT%}
+{%include file="contentbox_start.html" boxtitle="Create New Global Announcement"%}
+<form action="index.php" method="post">
+<table style="font-size:80%;">
+<tr><td style="width:4em;">Title: </td><td><input type="text" name="title" /></td></tr>
+<tr><td style="width:4em;">Text: </td><td><textarea name="text" rows="5" cols="80"></textarea></td></tr>
+<input type="hidden" name="mode" value="add_global_announcement">
+</table>
+<input type="submit" />
+</form>
+{%include file="contentbox_end.html"%}
+{%/if%}
+{%include file="contentbox_end.html"%} 
+{%include file="contentbox_start.html" boxtitle="Welcome!"%}
+<p>Welcome to AIStGradebook!</p>
+<p>This software is considered <b>alpha-quality</b>; that is, functions may be missing or buggy, and the codebase is subject to rapid change. If you would like to send feedback about a bug or feature request, please email forgotenland [at] gmail [dot] com.</p>
+{%include file="contentbox_end.html"%}
+</div>
+</div>
+{%else%}
+<div class="clearfix">
+{%include file="contentbox_start.html" shrinkwrap=true%}
+<p>This is a private system - No anonymous login.<br />
+Please login below.</p>
+{%include file="contentbox_end.html"%}
+</div>
+{%include file="loginform.html"%}
+{%/if%}
+{%include file="common_footer.html"%}

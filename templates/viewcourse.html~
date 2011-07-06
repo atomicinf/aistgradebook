@@ -1,0 +1,128 @@
+{%include file="common_header.html"%}
+{%if $V_IS_LOGGED_IN%}
+{%if not $LOCKOUT_PAGE%}
+{%if $A_COURSE_DATA%}
+<div class="clearfix">
+<div style="float:left;width:365px;border:1px solid #eeeeff">
+{%include file="contentbox_start.html" boxtitle="Basic Info"%}
+<table class="noborders">
+<tr><th class="one" style="vertical-align:top;">Course</th><td class="three">{%$A_COURSE_DATA.course_name%}</td></tr>
+<tr><th class="two" style="vertical-align:top;">Code</th><td class="four">{%$A_COURSE_DATA.course_name_short%}</td></tr>
+<tr><th class="one" style="vertical-align:top;">Instructor</th><td class="three">{%$A_COURSE_DATA.instructor%}</td></tr>
+<tr><th class="two" style="vertical-align:top;">Term</th><td class="four">{%$A_COURSE_DATA.term%}</td></tr>
+<tr><th class="one" style="vertical-align:top;">Description</th><td class="three">{%$A_COURSE_DATA.description%}</td></tr>
+</table>
+{%include file="contentbox_end.html"%}
+{%include file="contentbox_start.html" boxtitle="Extended Info"%}
+<div style="max-height:160px;overflow:auto;"><p style="margin:6px 0px 6px 0px";>{%$A_COURSE_DATA.info%}</p></div>
+{%include file="contentbox_end.html"%}
+{%if $V_PERMISSIONS_C_VIEWOWNGRADES%}
+{%include file="contentbox_start.html" boxtitle="Progress At-a-Glance"%}
+<p>To be implemented.</p>
+{%include file="contentbox_end.html"%}
+{%/if%}
+{%if $V_PERMISSIONS_C_VIEWCLASSLIST%}
+{%include file="contentbox_start.html" boxtitle="Class List"%}
+<table class="splashpage">
+<tr class="header"><th>Role</th><th>Title</th><th>Name</th></tr>
+{%foreach from=$A_COURSE_CLASS_LIST key=k item=v%}
+<tr class="{%if $k is even%}odd{%else%}even{%/if%}"><td>{%if $v.type == 2 %}Instr.{%elseif $v.type == 1%}TA{%else%}Student{%/if%}</td><td>{%$v.title%}</td><td>{%$v.name%}</td></tr>
+{%/foreach%}
+</table>
+{%include file="contentbox_end.html"%}
+{%/if%}
+</div>
+<div style="margin-left:355px;border:1px solid #eeeeff">
+{%include file="contentbox_start.html" boxtitle="Course Announcements"%}
+{%foreach from=$A_COURSE_ANNOUNCEMENTS key=k item=v%}
+{%if $v.course_name%}
+{%include file="contentbox_start.html" background_color="#e2e2ff" boxtitle=$v.course_name|cat:" - "|cat:$v.announcement_title righttext="Posted "|cat:$v.announcement_time%}
+{%else%}
+{%include file="contentbox_start.html" background_color="#e2e2ff" boxtitle="System message"|cat:" - "|cat:$v.announcement_title righttext="Posted "|cat:$v.announcement_time%}
+{%/if%}
+<p>{%$v.announcement_text%}</p>
+{%include file="contentbox_end.html"%}
+{%foreachelse%}
+<p>No recent announcements exist for this course.</p>
+{%/foreach%}
+{%if $V_IS_MEMBER or $V_PERMISSIONS_CLASSPERMISSIONSEVERYWHERE%}
+{%include file="contentbox_end.html"%}
+{%include file="contentbox_start.html" boxtitle="Recent Assignments" righttext="See All"%}
+{%if $A_COURSE_RECENT_ASSIGNMENTS%}
+<table class="splashpage">
+<tr class="header"><th>Name</th><th>Code</th><th>Due Date</th><th>Max. Points</th><th>Max. Value</th>{%if $V_PERMISSIONS_C_VIEWALLGRADES and $V_PERMISSIONS_C_SETGRADES%}<th># Graded</th>{%/if%}<th>Description</th></tr>
+{%foreach from=$A_COURSE_RECENT_ASSIGNMENTS key=k item=v%}
+<tr class="{%if $k is even%}odd{%else%}even{%/if%}"><td>{%$v.assignment_name%}</td><td>{%$v.assignment_code%}</td><td>{%$v.due_date|date_format:"%Y-%m-%d"%}</td><td>{%$v.max_points%}</td><td>{%$v.max_points*$v.weight%}</td>{%if $V_PERMISSIONS_C_VIEWALLGRADES and $V_PERMISSIONS_C_SETGRADES%}<td>TODO</td>{%/if%}<td>{%$v.description%}</td></tr>
+{%/foreach%}
+</table>
+{%else%}
+<p>No recent assignments exist.</p>
+{%/if%}
+{%include file="contentbox_end.html"%}
+{%include file="contentbox_start.html" boxtitle="Upcoming Assignments" righttext="See All"%}
+{%if $A_COURSE_UPCOMING_ASSIGNMENTS%}
+<table class="splashpage">
+<tr class="header"><th>Name</th><th>Code</th><th>Due Date</th><th>Max. Points</th><th>Max. Value</th>{%if $V_PERMISSIONS_C_VIEWALLGRADES and $V_PERMISSIONS_C_SETGRADES%}<th># Graded</th>{%/if%}<th>Description</th></tr>
+{%foreach from=$A_COURSE_UPCOMING_ASSIGNMENTS key=k item=v%}
+<tr class="{%if $k is even%}odd{%else%}even{%/if%}"><td>{%$v.assignment_name%}</td><td>{%$v.assignment_code%}</td><td>{%$v.due_date|date_format:"%Y-%m-%d"%}</td><td>{%$v.max_points%}</td><td>{%$v.max_points*$v.weight%}</td>{%if $V_PERMISSIONS_C_VIEWALLGRADES and $V_PERMISSIONS_C_SETGRADES%}<td>TODO</td>{%/if%}<td>{%$v.description%}</td></tr>
+{%/foreach%}
+</table>
+{%else%}
+<p>No recent assignments exist.</p>
+{%/if%}
+{%include file="contentbox_end.html"%}
+{%/if%}
+{%if $V_PERMISSIONS_C_VIEWALLGRADES%}
+{%include file="contentbox_start.html" boxtitle="Gradebook At-a-Glance"%}
+<p>Lalalala</p>
+{%include file="contentbox_end.html"%}
+{%/if%}
+</div>
+</div>
+{%if $V_PERMISSIONS_MANAGECOURSES%}
+{%include file="contentbox_start.html" boxtitle="Edit Course Info"%}
+<form method="post" action="courses.php" style="font-size:80%">
+<table class="noborders" style="width:auto">
+<tr>
+<td>Course Name</td>
+</tr>
+<tr>
+<td><input type="text" name="course_name" value="{%$A_COURSE_DATA.course_name%}" style="width:41.5em;" /></td>
+</tr>
+</table>
+<table class="noborders" style="width:auto">
+<tr>
+<td>Short Name</td>
+<td>Instructor</td>
+<td>Term</td>
+</tr>
+<tr>
+<td><input type="text" name="course_name_short" value="{%$A_COURSE_DATA.course_name_short%}" maxlength="12" style="width:10em;"/></td>
+<td><input type="text" name="instructor" value="{%$A_COURSE_DATA.instructor%}" maxlength="80" style="width:20em;"/></td>
+<td><input type="text" name="term" value="{%$A_COURSE_DATA.term%}" maxlength="40" style="width:10em;"/></td>
+</tr>
+</table>
+<table class="noborders">
+<tr><td>Course Description</td></tr>
+<tr><td><input type="text" name="description" value="{%$A_COURSE_DATA.description%}" maxlength="255" style="width:41.5em;"/></td></tr>
+</table>
+<table class="noborders" style="width:auto">
+<tr><td>Course Info</td></tr>
+<tr><td><textarea name="info" rows="10" cols="67">{%$A_COURSE_DATA.info%}</textarea></td></tr>
+</table>
+<div><input type="hidden" name="mode" value="editcourse" /><input type="hidden" name="id" value="{%$A_COURSE_DATA.id%}" />
+<input type="submit" /></div>
+</form>
+{%include file="contentbox_end.html"%}
+{%/if%}
+{%else%}
+{%include file="errorbox.html" boxtitle="Error" boxcontent="The course you have attempted to access does not exist."%}
+{%/if%}
+{%/if%}
+{%else%}
+<div class="clearfix">
+{%include file="errorbox.html" boxtitle="Login Required" boxcontent="You must be logged in to use this page.<br />Debug Notice: error_mustlogin.html should have been served. Please contact the system administrator."%}
+</div>
+{%include file="loginform.html"%}
+{%/if%}
+{%include file="common_footer.html"%}

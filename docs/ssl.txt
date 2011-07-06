@@ -1,0 +1,62 @@
+[This document is localised for the CSUS installation of AIStGradebook and contains information inappropriate for a general installation.]
+
+[This document is dated 2009-08-11; no guarantee is made that this information is current for any date other than its date of issue.]
+
+To protect the privacy and security of its users, AIStGradebook operates primarily over HTTPS; in other words, it uses HTTP over a connection secured by TLS (Transport Layer Security), more commonly known by the name of its predecessor SSL (Secure Sockets Layer).
+
+HTTPS secures your browser's connection to the server using the highest-grade encryption available to your browser; in modern browsers HTTPS connections can be secured with 256-bit AES, the same encryption approved for U.S. Government top secret information, though depending on your browser your connection may be secured with a 128-bit algorithm, which is still considered sufficient for many secure applications. To establish the identity of the remote server (in order to ensure that you are communicating with the proper server and not an impersonator), your browser will verify the server's certificate, a piece of cryptographic information that contains identity information about the server itself, to ensure that it is trusted.
+
+How does this work? SSL certificates can be signed by other certificates; a signature denotes that the owner of the signing certificate trusts and endorses the owner of the signed certificate. Each certificate has a private key associated with it that is kept secret and required for signing and other elements of the SSL protocol; to assume a particular identity associated with a certificate, one must have both the certificate and the private key on hand. Certificates can be publicly distributed, but private keys are kept hidden. If a server is able to prove ownership of a certificate using a private key (along with some algorithms that never expose the key itself), then a client can be confident that the security of the connection has not been compromised.
+
+Signatures can eventually be traced to an entity called a certificate authority; if one can trust the certificate authority, one can trust all certificates with valid signatures from that CA.
+
+Authentication via SSL also works the other way. Your browser can store certificates and private keys that uniquely identify you. Through a process similar to the one that authenticates servers, a Web server can authenticate you if you present a proper, trusted certificate. Note that this process does NOT reveal any personal information or data apart from that contained in your certificate, and it does not reveal the private key associated with your certificate.
+
+What identifying information is contained in a certificate? Certificates have several main fields; they are listed below.
+- Country: A two-digit country code.
+- State: The name of a state, province, or other such entity.
+- Location: The name of a smaller geographical location like a city or region.
+- Organization: The name of the organization associated with the certificate.
+- Organizational unit: The name of the unit within the named organization that is associated with the certificate.
+- Common name: The name of the certificate's owner. For server certificates it is the server's hostname (e.g. www.example.com); for personal certificates it is typically the holder's legal name (e.g. John Doe or John Q. Public).
+- Email address: A contact email address belonging to the certificate's owner.
+
+A certificate also contains similar information about the certificate authority that signed it, as well as a serial number (to identify certificates belonging to a particular CA) and a thumbprint (to help ensure the certificate has not been tampered with).
+
+AIStGradebook supports and automatically detects the presence of HTTPS connections. If you are connected via HTTPS, the user bar will display an entry saying "Secure connection - not logged in" if you are not logged in, or "Securely logged in as (name)" if you are logged in. AIStGradebook also supports client authentication via a client certificate - if you presented a valid AISt-issued certificate when the webserver asked for one, AIStGradebook will automatically attempt to log in to the account associated with the name and email address on your certificate. Because the webserver only accepts a valid, properly signed certificate, and the method of creating one requires the certificate authority's private key, it is extremely impractical to create false credentials, making this method of authentication quite safe as long as you keep your computer properly secured.
+
+To establish a secure connection to AIStGradebook without issues, you will need to install the AISt Certificate Authority to your browser or certificate store; since this CA is not installed by default your browser will raise errors unless you do so. This can be done by navigating to http://atomicinf.homelinux.org/ca.crt and following your browser's instructions.
+
+To use certificate-based authentication, you will need to obtain a certificate signed by the Atomic Inferno Studios General-Purpose Intermediate CA; since this CA is not installed by default you will need to install it to verify certificates signed by it. If you need the intermediate CA's certificate you can obtain it from http://atomicinf.homelinux.org/ica01.crt - again, follow your browser's instructions.
+
+After this is done, you have two options. You can either create a certificate signing request using a tool like OpenSSL and present it to the CA's operator (currently Ben Yuan), or ask the CA's operator to take care of the entire process.
+
+The Atomic Inferno Studios General-Purpose Intermediate CA requires applicants wishing to obtain a new certificate, to renew an existing certificate, or to recover a lost certificate to report to the CA operator in person with the following:
+
+- An original document establishing identity; this document must contain an attached, up-to-date photo. Current student IDs or school IDs with photos are accepted for this purpose; alternatively, the CA accepts driver's licenses, DMV ID cards, passports, permanent resident cards, and other forms of photo identification at its discretion.
+- An original document or a notarized copy of an original document establishing clearance for the application for which the certificate is issued. For this copy of AIStGradebook, a document establishing association with your educational organization is required. Current student IDs or school IDs are accepted for this purpose; alternatively, the CA accepts acceptance letters, transcripts, other non-generic communication between you and your educational organization printed on official letterhead, and other documents at its discretion.
+- A physical portable storage device, like a USB flash drive or an external hard drive, on which to store the certificate and associated files. If you are generating your own CSR, please bring it with you on the same media. The CA will not send or accept such documents over email or any sort of network unless such correspondence can be properly secured; please inquire in advance if interested.
+
+The process of generating and signing a certificate takes only a few minutes.
+
+If you are generating your own CSR, you will receive a certificate signed by the Atomic Inferno Studios General-Purpose Intermediate CA, which you must then combine with the private key you generated when creating the CSR into a PKCS#12 file (or similar) and import it into your browser. If you are having the CA do all the work, you will receive a PKCS#12 file on your removable media along with a password required for the import process; this password prevents the file, which contains your signed certificate and its corresponding private key, from being used by a third party.
+
+Once you have successfully imported the certificate and private key from the PKCS#12 file, you are recommended to delete the PKCS#12 file immediately to prevent reuse. If you would like to make a backup of your certificate, your browser has tools for doing so.
+
+Once your personal certificate is successfully imported to your computer, you will be asked to present a certificate the next time you visit AIStGradebook. Assuming the process was successful, you will be automatically logged in to your AIStGradebook account upon presentation of the correct certificate; you may log in simply by presenting your certificate for as long as the certificate remains valid and unrevoked. Student and instructor certificates are issued for a duration such that their validity does not exceed the beginning of the following school year; testing certificates (not valid for authentication to AIStGradebook, but potentially useful for AISt's other projects) are issued for a duration of 7 days at a time.
+
+In order to facilitate login from other terminals (which is not recommended), your account is still accessible by its username and password (unless you specifically opt-out of this function). If you decide to use certificate authentication, please set a strong password and secure your computer against intrusion - security is only as effective as its weakest link.
+
+Compromise of a certificate is considered a serious matter at AISt. If a third party takes possession of the private key associated with your certificate, they can subsequently impersonate you unless the compromise is reported immediately and AISt revokes the certificate. A revoked certificate will no longer be accepted for authentication to AISt's servers and web applications, including AIStGradebook; to protect your information, you MUST report suspected compromise immediately so that appropriate action may be taken. Certificate revocation notices are published in the form of certificate revocation lists; the CRL for the Atomic Inferno Studios General-Purpose Intermediate CA can be found at http://atomicinf.homelinux.org/ica01.crl. Navigating to this link in your web browser should automatically update your browser with the most current CRL; though not necessary for AIStGradebook, it is highly recommended if you are using AISt-issued certificates in other contexts.
+
+Generating your own certificate signing request is beyond the scope of this document and should only be attempted by experienced users. To conform with AISt-generated CSRs, it is strongly recommended that you use the following information in your CSR, as certificates may be checked against more of these fields in the future for authentication purposes. If the CA operator is generating your CSR, it will follow this format.
+
+Country: US
+State: California
+Location: Silicon Valley
+Organization: Atomic Inferno Studios
+Organizational Unit: Development
+Common Name: [The name associated with your AIStGradebook account]
+Email Address: [The email address associated with your AIStGradebook account]
+
+Thank you for taking the time to read this document. You are encouraged to do more research about security on your own, as it is an ever-changing field. If you can, please invest the time and effort needed to secure your account.

@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link media="screen" type="text/css" rel="stylesheet" href="styles/common.css" />
+<link media="screen" type="text/css" rel="stylesheet" href="styles/clearfix.css" />
+<title>{%$PAGENAME%}</title>
+</head>
+<body>
+<div class="topbar"><h1>{%$PAGENAME%}</h1></div>
+<div class="navbar clearfix"><div class="right small">The time is {%$smarty.now|date_format:"%Y-%m-%d %H:%M:%S"%}</div>
+<div class="small" style="padding:2px;"><a href="index.php">Home</a>{%if $V_IS_LOGGED_IN%} &bull; <a href="courses.php">Courses</a> &bull; <a href="assignments.php">Assignments</a>{%/if%}</div>
+<div class="hr clearfix"></div>
+<div class="right small">{%if $V_IS_LOGGED_IN%}{%if $V_IS_HTTPS%}{%$S_LOGGED_IN_AS_SECURE%}{%else%}{%$S_LOGGED_IN_AS%}{%/if%} {%$V_USER_FULLNAME%} ({%$V_USERNAME%}) {%if $V_IS_X509%}{%$S_LOGGED_IN_WITH_X509%}{%else%} &bull; <a href="login.php?method=logout">Logout</a>{%/if%}{%else%}{%if $V_IS_HTTPS%}{%$S_NOT_LOGGED_IN_SECURE%}{%else%}{%$S_NOT_LOGGED_IN%}{%/if%} &bull; <a href="login.php">Login</a>{%/if%}</div>
+</div>
+{%foreach from=$A_GLOBAL_ERRORS item=v%}
+{%include file="errorbox.html" boxtitle=$v.title boxcontent=$v.content%}
+{%/foreach%}
+{%foreach from=$A_GLOBAL_NOTICES item=v%}
+{%include file="notifybox.html" boxtitle=$v.title boxcontent=$v.content%}
+{%/foreach%}
+{%foreach from=$A_LOCAL_ERRORS item=v%}
+{%include file="errorbox.html" boxtitle=$v.title boxcontent=$v.content%}
+{%/foreach%}
+{%foreach from=$A_LOCAL_NOTICES item=v%}
+{%include file="notifybox.html" boxtitle=$v.title boxcontent=$v.content%}
+{%/foreach%}

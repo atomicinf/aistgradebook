@@ -1,0 +1,59 @@
+{%include file="common_header.html"%}
+{%if $V_IS_LOGGED_IN%}
+
+{%* Iterate through all courses in the student assignment list. *%}
+{%foreach from=$A_STUDENT_ASSIGNMENT_LIST key=course_id item=course_assignment_list%}
+{%include file="contentbox_start.html" boxtitle=$A_STUDENT_COURSES.$course_id.course_name%}
+
+<table class="splashpage">
+
+<tr class="header"><th>Code</th><th>Name</th><th>Due Date</th><th>Max Pts</th><th>Grade</th><th>Weight</th><th>Description</th></tr>
+{%foreach from=$course_assignment_list key=k item=v%}
+{%if $v===1%}
+<tr><td colspan=7 style="text-align:center; background-color:#ccccee">Assignments above this line are due in the past. Assignments below this line are due in the future.</td></tr>
+{%else%}
+<tr class="{%if $k is even%}odd{%else%}even{%/if%}"><td style="width:6em;">{%$v.assignment_code%}</td><td style="width:18em;"><a href="assignments.php?mode=assignment_details&id={%$v.id%}">{%$v.assignment_name%}</a></td><td style="width:10em;">{%$v.due_date|date_format:"%Y-%m-%d %H:%M:%S"%}</td><td style="width:4em;">{%$v.max_points%}</td><td style="width:6em;" title="{%if $v.grade.comments%}Teacher comments: {%$v.grade.comments%}{%/if%}">{%if $v.grade.points%}{%$v.grade.points%}/{%$v.max_points%} ({%percent2letter percent=$v.grade.points/$v.max_points*100%}){%elseif $v.grade.is_overdue%}<span style="color:red;font-weight:bold">Overdue</span>{%else%}Ungraded{%/if%}</td><td style="width:4em;">&times;{%$v.weight%}</td><td>{%$v.description%}</td></tr>
+{%/if%}
+{%foreachelse%}
+<tr><td colspan=7>No assignments were found for this course.</td></tr>
+{%/foreach%}
+</table>
+
+{%include file="contentbox_end.html"%}
+{%/foreach%}
+
+{%foreach from=$A_INSTRUCTOR_ASSIGNMENT_LIST key=course_id item=course_assignment_list%}
+{%include file="contentbox_start.html" boxtitle=$A_INSTRUCTOR_COURSES.$course_id.course_name%}
+{%if $A_INSTRUCTOR_COURSES.$course_id.MANAGEASSIGNMENTS%}<form class="tableform" action="assignments.php" method="post">{%/if%}
+<table class="splashpage">
+
+<tr class="header"><th>Code</th><th>Name</th><th>Due Date</th><th>Max Pts</th><th>Weight</th><th>Num Graded</th><th>Description</th>{%if $A_INSTRUCTOR_COURSES.$course_id.MANAGEASSIGNMENTS%}<th />{%/if%}</tr>
+{%foreach from=$course_assignment_list key=k item=v%}
+{%if $v===1%}
+<tr><td colspan={%if $A_INSTRUCTOR_COURSES.$course_id.MANAGEASSIGNMENTS%}8{%else%}7{%/if%} style="text-align:center; background-color:#ccccee">Assignments above this line are due in the past. Assignments below this line are due in the future.</td></tr>
+{%else%}
+<tr class="{%if $k is even%}odd{%else%}even{%/if%}"><td style="width:6em;">{%$v.assignment_code%}</td><td style="width:18em;"><a href="assignments.php?mode=assignment_details&id={%$v.id%}">{%$v.assignment_name%}</a></td><td style="width:10em;">{%$v.due_date|date_format:"%Y-%m-%d %H:%M:%S"%}</td><td style="width:4em;">{%$v.max_points%}</td><td style="width:4em;">&times;{%$v.weight%}</td><td style="width:6em;">{%$v.num_graded%}/{%$v.num_total%}</td><td>{%$v.description%}</td>{%if $A_INSTRUCTOR_COURSES.$course_id.MANAGEASSIGNMENTS%}<td style="width:4em;"><a href="assignments.php?mode=delete_assignment&id={%$v.id%}">Delete</a></td>{%/if%}</tr>
+{%/if%}
+{%foreachelse%}
+<tr><td colspan={%if $A_INSTRUCTOR_COURSES.$course_id.MANAGEASSIGNMENTS%}8{%else%}7{%/if%}>No assignments were found for this course.</td></tr>
+{%/foreach%}
+{%if $A_INSTRUCTOR_COURSES.$course_id.MANAGEASSIGNMENTS%}
+<tr style="vertical-align:top;"><td style="width:6em;"><div style="padding-right:2px;padding-top:1px"><input type="text" name="code" /></div></td><td style="width:18em;"><div style="padding-right:2px;padding-top:1px"><input type="text" name="name" /></div></td><td style="width:10em;"><div style="padding-right:2px;padding-top:1px"><input type="text" name="due_date" /></div></td><td style="width:4em;"><div style="padding-right:2px;padding-top:1px"><input type="text" name="max_points" /></div></td><td style="width:4em;"><div style="padding-right:2px;padding-top:1px"><input type="text" name="weight" /></div></td><td style="width:4em;"><div style="padding-right:2px;padding-top:1px"><input type="text" disabled /></div></td><td><div style="padding-right:2px"><textarea name="description" rows="1" style="border:1px solid black;width:100%;"></textarea></div></td><td><div style="padding-right:2px;padding-top:1px"><input type="submit" value="+" /></div></td></tr>
+{%/if%}
+</table>
+{%if $A_INSTRUCTOR_COURSES.$course_id.MANAGEASSIGNMENTS%}<input type="hidden" name="mode" value="add_assignment" />
+<input type="hidden" name="course_id" value="{%$course_id%}" />
+</form>{%/if%}
+
+{%* Add assignment form *%}
+
+{%include file="contentbox_end.html"%}
+{%/foreach%}
+
+{%else%}
+<div class="clearfix">
+{%include file="errorbox.html" boxtitle="Login Required" boxcontent="You must be logged in to use this page.<br />Debug Notice: error_mustlogin.html should have been served. Please contact the system administrator."%}
+</div>
+{%include file="loginform.html"%}
+{%/if%}
+{%include file="common_footer.html"%}

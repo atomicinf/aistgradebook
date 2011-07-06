@@ -1,0 +1,10 @@
+CHANGELOG
+
+This file details changes to the source tree.
+
+0.1.8a
+- Announcement boxes in course announcements now display poster name.
+- Corrected a problem preventing assignment grades from being displayed in the View Assignment page.
+
+0.1.8b
+- Floating-point support added for grade values.
