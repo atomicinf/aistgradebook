@@ -56,10 +56,6 @@ CREATE TABLE IF NOT EXISTS `assignment_grades` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
---
--- Dumping data for table `assignment_grades`
---
-
 
 -- --------------------------------------------------------
 
@@ -77,15 +73,6 @@ CREATE TABLE IF NOT EXISTS `courses` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
---
--- Dumping data for table `courses`
---
-
-INSERT INTO `courses` (`id`, `name`, `instructor`, `term`, `description`, `info`) VALUES
-(1, 'Advanced Topics in Math', 'Parsons', 'Term', 'Test', 'Test'),
-(2, 'Class 4', 'Brockman', 'Term', 'Test', 'Test'),
-(3, 'Class 2', 'Stephens', 'Term', 'Test', 'Test'),
-(4, 'Class 3', 'Carmel', 'Term', 'Test', 'Test');
 
 -- --------------------------------------------------------
 
@@ -103,16 +90,6 @@ CREATE TABLE IF NOT EXISTS `course_memberships` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
---
--- Dumping data for table `course_memberships`
---
-
-INSERT INTO `course_memberships` (`id`, `user_id`, `course_id`, `type`, `is_active`, `permissions`) VALUES
-(1, 1, 1, 0, 1, 0),
-(2, 1, 2, 0, 1, 0),
-(3, 2, 2, 0, 1, 0),
-(4, 2, 3, 0, 1, 0),
-(5, 2, 4, 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -132,11 +109,3 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `username`, `name`, `title`, `password`, `email`, `user_permissions`, `user_flags`) VALUES
-(1, 'administrator', 'Ben Yuan (System Administration)', 'System Administrator', 'b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86', 'forgotenland@gmail.com', 31, 0),
-(2, 'user1', 'User 1', 'Tester', 'b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86', 'none', 0, 0);
